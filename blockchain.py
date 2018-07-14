@@ -100,7 +100,7 @@ class Blockchain(object):
         """
         proof = 0
         while not self.is_valid_proof(last_proof, proof):
-        	proof = proof + 1 # increment proof since it is not valid yet
+            proof = proof + 1 # increment proof since it is not valid yet
 
         return proof
 
@@ -108,15 +108,15 @@ class Blockchain(object):
 
     @staticmethod
     def is_valid_proof(last_proof, proof):
-    	"""
-		Checks whether the proof is valid: Does hash(last_proof, proof) contain 4 leading zeros?
+        """
+        Checks whether the proof is valid: Does hash(last_proof, proof) contain 4 leading zeros?
 
-		:param last_proof: <int> Previous Proof
-		:param proof: <int> Current proof that is being validated
-		:return <bool> True if the proof is valid, False if it not valid
-    	"""
+        :param last_proof: <int> Previous Proof
+        :param proof: <int> Current proof that is being validated
+        :return <bool> True if the proof is valid, False if it not valid
+        """
 
-    	guess = f'{last_proof}{proof}'.encode() # format the string with the last proof and the checking proof, and encode it
+        guess = f'{last_proof}{proof}'.encode() # format the string with the last proof and the checking proof, and encode it
         guess_hash = hashlib.sha256(guess).hexdigest() # Generate the hash
         return guess_hash[:4] == "0000"  # check whether the hash has 4 leading zeroes or not
 
@@ -139,34 +139,34 @@ blockchain = Blockchain()
 # route for mining blocks
 @app.route('/mine', methods=['GET'])
 def mine():
-	# use Proof of work algo to get next proof
-	last_block = blockchain.last_block()
-	last_proof = last_block['proof']
-	proof = blockchain.proof_of_work_algorithm(last_proof)
+    # use Proof of work algo to get next proof
+    last_block = blockchain.last_block
+    last_proof = last_block['proof']
+    proof = blockchain.proof_of_work_algorithm(last_proof)
 
-	# need to ensure that there is a reward for finding the proof
-	# the sender is '0' to show that there is a new coin mined
-	blockchain.new_transaction(
-		sender="0",
-		recipient=node_addr,
-		amt=1
-	)
+    # need to ensure that there is a reward for finding the proof
+    # the sender is '0' to show that there is a new coin mined
+    blockchain.new_transaction(
+        sender="0",
+        recipient=node_addr,
+        amt=1
+    )
 
 
-	# make a new black and add it to the chain
-	prev_hash = blockchain.hash(last_block)
-	block = blockchain.new_block(proof, prev_hash)
+    # make a new black and add it to the chain
+    prev_hash = blockchain.hash(last_block)
+    block = blockchain.new_block(proof, prev_hash)
 
-	response = {
-		'message': 'New block created',
-		'index': block['index'],
-		'transactions': block['transactions'],
-		'proof': block['proof'],
-		'previous_hash': block['previous_hash']
-	}
+    response = {
+        'message': 'New block created',
+        'index': block['index'],
+        'transactions': block['transactions'],
+        'proof': block['proof'],
+        'previous_hash': block['previous_hash']
+    }
 
-	# return the json version of the response dictionary
-	return jsonify(response), 200
+    # return the json version of the response dictionary
+    return jsonify(response), 200
 
 
 
@@ -174,19 +174,19 @@ def mine():
 # route for adding new transaction
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
-	values = request.get_json()
+    values = request.get_json()
 
 
-	# check that the request is valid
-	required = ['sender', 'receiver', 'amount']
-	if not all(k in values for k in required):
-		return "Missing values", 400
+    # check that the request is valid
+    required = ['sender', 'receiver', 'amount']
+    if not all(k in values for k in required):
+        return "Missing values", 400
 
-	# make a new transaction
-	index = blockchain.new_transaction(values['sender'], values['receiver'], values['amount'])
+    # make a new transaction
+    index = blockchain.new_transaction(values['sender'], values['receiver'], values['amount'])
 
-	reponse = {'message': f'Transaction will be added to block {index}'}
-	return jsonify(response), 201
+    reponse = {'message': f'Transaction will be added to block {index}'}
+    return jsonify(response), 201
 
 
 # route for getting blockchain
