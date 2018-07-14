@@ -17,9 +17,21 @@ class Blockchain(object):
 		return
 
 
-	def new_transaction(self):
-		# add a new transaction to this object's transactions
-		return
+	def new_transaction(self, sender, receiver, amt):
+		"""
+		Create a new transaction to go into the next block
+
+		:param sender: <str> the address of the sender
+		:param receiver: <str> the address of the receiver
+		:param amt: <int> amount being moved
+		:return <int> the index of the block holding this transaction
+		"""
+		self.transactions.append({
+			'sender': sender,
+			'receiver': receiver,
+			'amount': amt
+			})
+		return self.last_block['index'] + 1
 
 
 	@staticmethod
