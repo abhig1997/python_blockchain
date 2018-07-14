@@ -127,7 +127,7 @@ class Blockchain(object):
 app = Flask(__name__)
 
 # generate a globally unique address for this node
-node_identifier = str(uuid4()).replace('-', '')
+node_addr = str(uuid4()).replace('-', '')
 
 # create the blockchain
 blockchain = Blockchain()
@@ -139,7 +139,37 @@ blockchain = Blockchain()
 # route for mining blocks
 @app.route('/mine', methods=['GET'])
 def mine():
-	return "Placeholder for mining a new block"
+	# use Proof of work algo to get next proof
+	last_block = blockchain.last_block()
+	last_proof = last_block['proof']
+	proof = blockchain.proof_of_work_algorithm(last_proof)
+
+	# need to ensure that there is a reward for finding the proof
+	# the sender is '0' to show that there is a new coin mined
+	blockchain.new_transaction(
+		sender="0",
+		recipient=node_addr,
+		amt=1
+	)
+
+
+	# make a new black and add it to the chain
+	prev_hash = blockchain.hash(last_block)
+	block = blockchain.new_block(proof, prev_hash)
+
+	response = {
+		'message': 'New block created',
+		'index': block['index'],
+		'transactions': block['transactions'],
+		'proof': block['proof'],
+		'previous_hash': block['previous_hash']
+	}
+
+	# return the json version of the response dictionary
+	return jsonify(response), 200
+
+
+
 
 # route for adding new transaction
 @app.route('/transactions/new', methods=['POST'])
