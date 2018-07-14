@@ -285,6 +285,7 @@ def full_chain():
     }
     return jsonify(response), 200
 
+
 # route to register nodes
 @app.route('/nodes/register', methods=['POST'])
 def register_nodes():
@@ -293,7 +294,7 @@ def register_nodes():
 	nodes = values.get('nodes')
 
 	if nodes is None:
-		return "Error: Please supply a valid list of nodes", 400
+		return "Error: List is not a valid list of nodes", 400
 
 	for node in nodes:
 		# register all the nodes
@@ -314,12 +315,12 @@ def consensus():
 
     if replaced:
         response = {
-            'message': 'Our chain was replaced',
+            'message': 'This chain was replaced due to node conflicts',
             'new_chain': blockchain.chain
         }
     else:
         response = {
-            'message': 'Our chain is authoritative',
+            'message': 'Our chain is the longest chain, and therefore the authority for this blockchain',
             'chain': blockchain.chain
         }
 
