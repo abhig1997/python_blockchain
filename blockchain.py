@@ -118,4 +118,41 @@ class Blockchain(object):
         return guess_hash[:4] == "0000"  # check whether the hash has 4 leading zeroes or not
 
         
-    
+####
+
+# create the Node
+app = Flask(__name__)
+
+# generate a globally unique address for this node
+node_identifier = str(uuid4()).replace('-', '')
+
+# create the blockchain
+blockchain = Blockchain()
+
+
+
+# make some routes for the app
+
+# route for mining blocks
+@app.route('/mine', methods=['GET'])
+def mine():
+	return "Placeholder for mining a new block"
+
+# route for adding new transaction
+@app.route('/transactions/new', methods=['POST'])
+def new_transaction():
+	return "Placeholder for adding a new transaction"
+
+# route for getting blockchain
+@app.route('/chain', methods=['GET'])
+def full_chain():
+    response = {
+        'chain': blockchain.chain,
+        'length': len(blockchain.chain),
+    }
+    return jsonify(response), 200
+
+
+####
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000) # run the Flask server on port 5000
