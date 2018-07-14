@@ -148,7 +148,7 @@ def mine():
     # the sender is '0' to show that there is a new coin mined
     blockchain.new_transaction(
         sender="0",
-        recipient=node_addr,
+        receiver=node_addr,
         amt=1
     )
 
@@ -180,12 +180,12 @@ def new_transaction():
     # check that the request is valid
     required = ['sender', 'receiver', 'amount']
     if not all(k in values for k in required):
-        return "Missing values", 400
+        return 'Missing values', 400
 
     # make a new transaction
     index = blockchain.new_transaction(values['sender'], values['receiver'], values['amount'])
 
-    reponse = {'message': f'Transaction will be added to block {index}'}
+    response = {'message': f'Transaction will be added to block {index}'}
     return jsonify(response), 201
 
 
@@ -193,8 +193,8 @@ def new_transaction():
 @app.route('/chain', methods=['GET'])
 def full_chain():
     response = {
-        'chain': blockchain.chain,
-        'length': len(blockchain.chain),
+        'chain': blockchain.bchain,
+        'length': len(blockchain.bchain),
     }
     return jsonify(response), 200
 
