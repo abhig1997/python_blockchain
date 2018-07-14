@@ -1,7 +1,10 @@
 import hashlib
 import json
-import time
+from textwrap import dedent
+from time import time
+from uuid import uuid4
 
+from flask import Flask, jsonify, request
 """
 Trying to build a blockchain to learn about why blockchains are so cool.
 
@@ -141,7 +144,20 @@ def mine():
 # route for adding new transaction
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
-	return "Placeholder for adding a new transaction"
+	values = request.get_json()
+
+
+	# check that the request is valid
+	required = ['sender', 'receiver', 'amount']
+	if not all(k in values for k in required):
+		return "Missing values", 400
+
+	# make a new transaction
+	index = blockchain.new_transaction(values['sender'], values['receiver'], values['amount'])
+
+	reponse = {'message': f'Transaction will be added to block {index}'}
+	return jsonify(response), 201
+
 
 # route for getting blockchain
 @app.route('/chain', methods=['GET'])
