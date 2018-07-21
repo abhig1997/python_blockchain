@@ -4,11 +4,9 @@ from textwrap import dedent
 from time import time
 from uuid import uuid4
 from urllib.parse import urlparse
-
-
 from flask import Flask, jsonify, request
 """
-Trying to build a blockchain to learn about why blockchains are so cool.
+Trying to build a blockchain to learn about blockchains.
 
 @author Abhi Gupta
 """
@@ -285,7 +283,7 @@ def full_chain():
         'chain': blockchain.bchain,
         'length': len(blockchain.bchain),
     }
-    return jsonify(response), 200
+    return jsonify(response), 200 # return a json response
 
 
 # route to register nodes
@@ -307,8 +305,8 @@ def register_nodes():
 		'message': 'New nodes have been registered',
 		'total_nodes': list(blockchain.nodes)
 	}
-	return jsonify(response), 201
-
+	return jsonify(response), 201 #return a json response
+ 
 
 # route to resolve conflicts between nodes
 @app.route('/nodes/resolve', methods=['GET'])
@@ -326,9 +324,9 @@ def consensus():
             'chain': blockchain.chain
         }
 
-    return jsonify(response), 200
+    return jsonify(response), 200 # return a json response
 
 
 ####
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000) # run the Flask server on port 5000
+    app.run(host='0.0.0.0', port=5001) # run the Flask server on local port 5001
