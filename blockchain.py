@@ -42,8 +42,10 @@ class Blockchain(object):
 
         while current_index < len(chain):
             block = chain[current_index]
-            print(f'{last_block}')
-            print(f'{block}')
+            a_str = str(last_block)
+            print(a_str)
+            a_str = str(block)
+            print(a_str)
             print("\n-----------\n")
             # check that the hash of the block is correct
 
@@ -205,7 +207,7 @@ class Blockchain(object):
 
         guess = f'{last_proof}{proof}'.encode() # format the string with the last proof and the checking proof, and encode it
         guess_hash = hashlib.sha256(guess).hexdigest() # Generate the hash
-        return guess_hash[:4] == "0000"  # check whether the hash has 4 leading zeroes or not
+        return guess_hash[:4] == "1234"  # check whether the hash has 4 leading zeroes or not
 
         
 ####
